@@ -20,13 +20,21 @@ class DsnTest extends TestCase
         $this->assertEquals('3306', $dsn->getFirstPort());
         $this->assertEquals('test_db', $dsn->getDatabase());
         $this->assertEquals($inputString, $dsn->getDsn());
+    }
 
-        $auth = $dsn->getAuthentication();
-        $this->assertArrayHasKey('username', $auth);
-        $this->assertArrayHasKey('password', $auth);
+    public function testPostgreSql()
+    {
+        $inputString = 'pgsql://root:root_pass@127.0.0.1:5432/test_db';
+        $dsn = new DSN($inputString);
 
-        $this->assertEquals('root', $auth['username']);
-        $this->assertEquals('root_pass', $auth['password']);
+        $this->assertTrue($dsn->isValid());
+        $this->assertEquals('pgsql', $dsn->getProtocol());
+        $this->assertEquals('root', $dsn->getUsername());
+        $this->assertEquals('root_pass', $dsn->getPassword());
+        $this->assertEquals('127.0.0.1', $dsn->getFirstHost());
+        $this->assertEquals('5432', $dsn->getFirstPort());
+        $this->assertEquals('test_db', $dsn->getDatabase());
+        $this->assertEquals($inputString, $dsn->getDsn());
     }
 
     public function testParameters()
